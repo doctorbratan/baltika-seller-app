@@ -1,1 +1,246 @@
-<p>order works!</p>
+<section>
+
+    <!-- Сторона Позиций -->
+    <div id="position-section">
+
+        <span id="query-contaier">
+
+            <span class="query">
+ 
+                <mat-form-field *ngIf="categories" class="mat-element" appearance="fill">
+                    <mat-label class="mat-element">Категория</mat-label>
+                    <mat-select  class="mat-element" [(ngModel)]="category">
+                        <mat-option class="mat-element" *ngFor="let category of categories" [value]="category._id">
+                            {{category.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="mat-element" class="example-full-width">
+                    <mat-label class="mat-element">По цене</mat-label>
+                    <input class="mat-element" matInput type="number" [(ngModel)]="cost">
+                </mat-form-field>
+
+            </span>
+
+            <span class="query">
+
+                <mat-form-field style="width: 70%;" class="mat-element">
+                    <mat-label class="mat-element">По названию</mat-label>
+                    <input class="mat-element" matInput [(ngModel)]="filterText">
+                </mat-form-field>
+
+                <mat-icon (click)="clearSearch()" class="pointer add-icon" aria-hidden="false" aria-label="Очистить"
+                    fontIcon="backspace">
+                </mat-icon>
+
+            </span>
+
+        </span>
+
+        <span *ngIf="positions" id="positons-container">
+            <span *ngFor="let position of positions | positionFilter: {category, cost, filterText}" class="position">
+                <span class="position-name">
+                    <b>[ {{position.category.name}} ]</b>
+                    <b>{{position.name}}</b>
+                </span>
+                <span *ngIf="!orderService.isPrinted" class="position-add">
+                    <button 
+                    class="mat-element"
+                    (click)="addToOrder(position)"
+                    [disabled]="pennding"
+                    *ngIf="!position.stop && !orderService.isPrinted"
+                    mat-raised-button>Добавить</button>
+                </span> 
+            </span>
+        </span>
+     
+    </div>
+    <!-- Сторона Позиций -->
+
+    <!-- Сторона Заказа -->
+    <div id="order-section">
+        <span id="info-container">
+
+            <span class="flex-column-center" >
+                <button class="mat-element" mat-flat-button (click)="clear()" color="primary">Очистить</button>
+                &nbsp;
+                <span class="flex-column-center" *ngIf="orderService.seller">
+                    <mat-icon aria-hidden="false" aria-label="" fontIcon="person"></mat-icon>
+                    <b>{{orderService.seller.name}}</b>
+                </span>
+            </span>
+
+            <span class="flex-column-center">
+                <mat-form-field class="mat-element" *ngIf="customers" appearance="fill">
+                    <mat-label class="mat-element">
+                        {{orderService.customer ? orderService.customer.name : "Заказчик"}}
+                    </mat-label>
+                    <mat-select [disabled]="orderService.isPrinted"  class="mat-element" (selectionChange)="onCustomerSelect($event)">
+                        <mat-option class="mat-element" *ngFor="let customer of customers" [value]="customer">
+                            {{customer.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field  class="mat-element" *ngIf="orderService.customer" appearance="fill">
+                    <mat-label class="mat-element">
+                        {{orderService.order_for ? orderService.order_for.name : "Стол"}}
+                    </mat-label>
+                    <mat-select [disabled]="orderService.isPrinted" class="mat-element" (selectionChange)="onOrderForChange($event)">
+                        <ng-container *ngFor="let element of order_for" >
+                            <mat-option class="mat-element" *ngIf="element.customer_id === orderService.customer._id"  [value]="element">
+                                {{element.name}}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+                <!-- <b *ngIf="orderService.update">{{ orderService.update | date: 'HH:mm dd/MM/yy' }}</b> -->
+            </span>
+
+            <span class="flex-column-center" >
+                <mat-form-field appearance="fill" class="mat-element">
+                    <mat-label class="mat-element">Оплата</mat-label>
+                    <mat-select class="mat-element" matNativeControl [(ngModel)]="orderService.payment">
+                      <mat-option class="mat-element" value="Наличные">Наличные</mat-option>
+                      <mat-option class="mat-element" value="Картой">Картой</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="mat-element" appearance="fill">
+                    <mat-label class="mat-element">Статус</mat-label>
+                    <mat-select class="mat-element" matNativeControl [(ngModel)]="orderService.status">
+                      <mat-option class="mat-element" value="Открыт">Открыт</mat-option>
+                      <mat-option class="mat-element" *ngIf="orderService._id && orderService.isPrinted" value="Закрыт">Закрыт</mat-option>
+                    </mat-select>
+                </mat-form-field>
+    
+    
+                <ng-container *ngIf=" authService.user && authService.user.status !== 'seller' " >
+                    <mat-checkbox class="mat-element"  [(ngModel)]="orderService.isPrinted">Закрыть доступ</mat-checkbox>
+                </ng-container>
+            </span>
+
+            <span *ngIf="orderService.list.length > 0" class="flex-column-center" >
+                <button
+                class="mat-element"
+                *ngIf="!orderService._id"
+                [disabled]="pennding"
+                style="width: 100%;" 
+                mat-flat-button 
+                (click)="post()"
+                color="accent">Создать
+                </button>
+                <button 
+                class="mat-element"
+                *ngIf="orderService._id"
+                [disabled]="pennding"
+                (click)="patch()"
+                style="width: 100%;" 
+                mat-flat-button 
+                color="accent">Сохранить
+                </button>
+                <ng-container *ngIf="orderService._id" >
+                    &nbsp;
+                    <button 
+                    class="mat-element" 
+                    style="width: 100%;"
+                    [disabled]="pennding"
+                    (click)="print()"
+                    mat-flat-button>Печать</button>
+                </ng-container>
+                <ng-container *ngIf="orderService._id && authService.user && authService.user.status !== 'seller' ">
+                    &nbsp;
+                    <button 
+                    class="mat-element"
+                    [disabled]="pennding"
+                    (click)="delete()"
+                    style="width: 100%;" 
+                    mat-flat-button 
+                    color="warn">Удалить
+                    </button>
+                </ng-container>
+               
+                &nbsp;
+            </span>
+
+        </span>
+
+        <span id="list-container">
+
+            <h1 *ngIf="!orderService._id">Новый Чек!</h1>
+            <h1 *ngIf="orderService.list.length == 0">Добавьте позицию!</h1>
+
+            <table *ngIf="orderService.list.length > 0"  class="GeneratedTable">
+                <thead>
+                  <tr>
+                    <th>X</th>
+                    <th class="position-name">Позиция</th>
+                    <th>Цена</th>
+                    <th>Кол-во</th>
+                    <th>Итого</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let position of orderService.list; let i = index">
+                    <td >
+                        <b  
+                        *ngIf="!orderService.isPrinted"  
+                        class="remove"
+                        (click)="removeFromOrder(i)">
+                            X
+                        </b>
+                    </td>
+                    <td>
+                        [ {{position.category.name}} ] {{position.name}}
+                        <b *ngIf="position.processed" style="color: white;">
+                            &nbsp;
+                            ✓
+                        </b>
+                    </td>
+                    <td>
+                        <b *ngIf=" orderService.customer && orderService.customer.type === 'admin' ">
+                            {{position.cost}}
+                        </b>
+                        <b *ngIf=" orderService.customer && orderService.customer.type === 'personal' ">
+                            {{position.personal_cost}}
+                        </b>
+                        <b *ngIf=" orderService.customer && orderService.customer.type === 'guest' ">
+                            {{position.cost}}
+                        </b>
+                        <b *ngIf=" !orderService.customer ">
+                            {{position.cost}}
+                        </b>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!position.processed">
+                            <b class="remove" (click)="orderService.minusQuantity(i)">-</b>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </ng-container>
+                        {{position.quantity}}
+                        <ng-container *ngIf="!position.processed">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <b class="remove" (click)="orderService.plusQuantity(i)">+</b>
+                        </ng-container>
+                    </td>
+                    <td>{{position.total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <span *ngIf="orderService.list.length > 0" id="total-info">
+                    <ng-container *ngIf="orderService.salle">
+                        <b>Итого: {{orderService.total}} MDL</b>
+                         &nbsp;
+                    </ng-container>
+                    <b *ngIf="orderService.salle">Скидка: {{orderService.salle}} %</b>
+                    <mat-form-field *ngIf=" authService.user && authService.user.status !== 'seller' " class="example-full-width" class="mat-element">
+                        <mat-label class="mat-element">%</mat-label>
+                        <input class="mat-element" matInput type="number" [(ngModel)]="orderService.salle" (ngModelChange)="orderService.computePrice()" >
+                    </mat-form-field>
+                    <b>К оплате: {{orderService.total_price}} MDL</b>
+              </span>
+        </span>
+
+    </div>
+    <!-- Сторона Заказа -->
+</section>

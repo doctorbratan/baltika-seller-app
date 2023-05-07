@@ -1,1 +1,25 @@
-<p>payment works!</p>
+<section>
+    <form [formGroup]="data">
+  
+      <mat-form-field>
+        <mat-label>Снятие</mat-label>
+        <mat-select [disabled]="true" formControlName="payment">
+          <mat-option value="Наличные">Наличные</mat-option>
+        </mat-select>
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Причина</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Сумма</mat-label>
+        <input matInput formControlName="summ" type="number">
+      </mat-form-field>
+  
+      <br>
+  
+      <button [disabled]="!data.valid || pennding" mat-raised-button color="primary" (click)="post()">Сохранить</button>
+    </form>
+  </section>

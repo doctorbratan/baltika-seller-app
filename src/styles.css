@@ -53,6 +53,11 @@ ul, li, a{
 }
 
 @media (max-width: 768px) {
+
+    body {
+        overflow: scroll;
+    }
+
     mat-form-field, mat-label, mat-select, mat-option, input, mat-checkbox, button {
         font-size: 10px;
     }

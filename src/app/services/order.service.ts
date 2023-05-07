@@ -21,7 +21,7 @@ export interface OrderPosition {
   quantity: number,
   total: number,
   action: boolean,
-  tasks: any[],
+  task: string,
   storage: boolean
 }
 
@@ -75,7 +75,7 @@ export class OrderService {
       total: position.cost,
       action: position.action,
       storage: position.storage,
-      tasks: position.tasks
+      task: position.task
     })
     
     let _new = true

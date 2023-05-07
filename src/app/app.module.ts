@@ -46,6 +46,7 @@ import { OrderComponent } from './seller-layout/order/order.component';
 import { ListComponent } from './seller-layout/list/list.component';
 import { PaymentComponent } from './seller-layout/payment/payment.component';
 import { StorageComponent } from './seller-layout/storage/storage.component';
+import { IonicModule } from '@ionic/angular';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { StorageComponent } from './seller-layout/storage/storage.component';
     MatTableModule,
     MatCheckboxModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    IonicModule.forRoot()
   ],
   providers: [
     DatePipe,

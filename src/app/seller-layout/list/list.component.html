@@ -1,1 +1,64 @@
-<p>list works!</p>
+<section>
+    <header>
+        <mat-form-field *ngIf="customers" class="mat-element" appearance="fill">
+            <mat-label class="mat-element">Заказчик</mat-label>
+            <mat-select  class="mat-element" [(ngModel)]="customer" (selectionChange)="settingChange()">
+                <mat-option (ngValue)="undefined">
+                    Показать все
+                </mat-option>
+                <mat-option class="mat-element" *ngFor="let customer of customers" [value]="customer._id">
+                    {{customer.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        &nbsp;&nbsp;
+        <mat-checkbox [(ngModel)]="my" (change)="myChange($event); settingChange()" class="example-margin">Только мое</mat-checkbox>
+    </header>
+
+    <aside >
+        <ng-container *ngIf="orders && orders.length > 0 && !loading">
+            <div *ngFor="let order of orders | orderFilter: {customer, seller}" class="order">
+
+                <span class="flex-column-center" >
+                    <b>Открыт: <b class="active">{{ order.start | date: 'HH:mm dd/MM/yy' }}</b> </b>
+                    &nbsp;
+                    <b>Обновлен: <b class="active">{{ order.update | date: 'HH:mm dd/MM/yy' }}</b> </b>
+                </span>
+
+                <span class="flex-column-center" >
+                    <b>Официант: <b class="active">{{ order.seller.name }}</b> </b>
+                    &nbsp;
+                    <b>Заказчик: <b class="active">{{ order.customer.name }}</b> </b>
+                    &nbsp;
+                    <b>Стол: <b class="active">{{ order.order_for.name }}</b> </b>
+                </span>
+
+                <span class="flex-column-center" >
+                    <b>Оплата: <b class="active">{{ order.payment }}</b> </b>
+                    <ng-container *ngIf="order.salle">
+                        &nbsp;
+                        <b>Скидка: <b class="active">{{ order.salle }}</b> % </b>
+                    </ng-container>
+                    &nbsp;
+                    <b>К Оплате: <b class="active">{{ order.total_price }}</b> лей </b>
+                </span>
+
+                <button 
+
+                mat-raised-button 
+                color="primary"
+                [routerLink]="['/seller/order']" 
+                [queryParams]="{ _id: order._id }"
+                >
+                Редактировать</button>
+
+            </div>
+        </ng-container>
+    </aside>
+      
+    <h1 *ngIf="!loading && orders &&  (orders | orderFilter: {customer, seller}).length == 0 ">Открытых заказов нет!</h1>
+    <h1 *ngIf="!orders && !loading">Ошибка :(</h1>
+    <div *ngIf="loading" class="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+</section>

@@ -1,1 +1,48 @@
-<p>storage works!</p>
+<section>
+    <header *ngIf="categories && positions && !loading">
+
+        <mat-form-field>
+            <mat-label>Категория</mat-label>
+            <mat-select [(ngModel)]="category" name="category">
+                <mat-option class="mat-element" *ngFor="let cat of categories" [value]="cat._id">
+                    <b class="mat-element">{{ cat.name }}</b>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field >
+            <mat-label>Позиция</mat-label>
+            <mat-select class="mat-element" [(ngModel)]="position" name="position">
+                <ng-container *ngFor="let pos of positions">
+                    <mat-option class="mat-element" *ngIf="pos.category._id === category" [value]="pos">
+                        <b class="mat-element">{{ pos.name }}</b>
+                    </mat-option>
+                </ng-container>
+            </mat-select>
+        </mat-form-field>
+
+        <button *ngIf="position" mat-raised-button color="accent" class="mat-element" [disabled]="pennding" (click)="add()">Добавить</button>
+
+    </header>
+    <aside>
+        <ng-container *ngIf="storage.length > 0 && !loading">
+            <div *ngFor="let item of storage; let i = index" class="position">
+                <button class="mat-element" mat-raised-button color="warn" (click)="remove(i)">Удалить</button>
+                &nbsp;
+                <b>[ {{item.category.name}} ] </b>
+                <b>{{item.name}} </b>
+                &nbsp;
+                <mat-form-field>
+                    <mat-label>Количество</mat-label>
+                    <input matInput type="number" [(ngModel)]="item.quantity">
+                </mat-form-field>
+            </div>
+            <br><br>
+            <button class="mat-element" mat-raised-button color="accent" [disabled]="pennding || !checkBeforeUpdate()" (click)="updateStorage()">Обновить склад</button>
+        </ng-container>
+        <h1 *ngIf="storage.length == 0 && !loading">Добавьте позицию!</h1>
+        <div *ngIf="loading" class="loading">
+            <mat-spinner></mat-spinner>
+        </div>
+    </aside>
+</section>

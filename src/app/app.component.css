@@ -1,7 +1,22 @@
 .main-loading {
     width: 100%;
-    min-height: calc( 100vh - var(--footer_heigth) );
+    min-height: 100vh;
+    background-color: var(--first_color);
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+section {
+    width: 100%;
+    height: auto;
+    background-color: var(--first_color);
+}
+
+@media (max-width: 768px) {
+    
+    section {
+        overflow: auto;
+    }
+
 }

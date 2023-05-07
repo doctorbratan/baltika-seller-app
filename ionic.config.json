@@ -1,0 +1,12 @@
+{
+  "defaultProject": "baltika-seller",
+  "projects": {
+    "baltika-seller": {
+      "name": "baltika-seller",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular"
+    }
+  }
+}
