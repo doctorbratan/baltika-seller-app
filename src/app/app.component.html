@@ -1,6 +1,6 @@
 <div *ngIf="loading" class="main-loading">
     <mat-spinner></mat-spinner>
-</div>
-<section *ngIf="!loading">
+</div> 
+<ng-container *ngIf="!loading">
     <router-outlet></router-outlet>
-</section>
+</ng-container>

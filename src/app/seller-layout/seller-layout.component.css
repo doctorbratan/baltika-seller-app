@@ -1,7 +1,8 @@
 #content {
+    overflow: auto;
     width: 100%;
     height: auto;
-    padding-bottom: var(--footer_heigth);
+    margin-bottom: var(--footer_heigth);
 }
 
 .loading {

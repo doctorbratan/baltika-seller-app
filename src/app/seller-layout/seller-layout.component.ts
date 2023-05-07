@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class SellerLayoutComponent implements OnInit {
 
-  loading: boolean = true
+  loading: boolean = false
   
 
   constructor (
@@ -17,21 +17,7 @@ export class SellerLayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-    setTimeout(() => {
-      this.checkUser();
-    }, 500);
-
   }
 
-  checkUser() {
-
-    if (!this.authService.user) {
-      this.authService.logout();
-    } else {
-      this.loading = false
-    }
-
-  }
 
 }

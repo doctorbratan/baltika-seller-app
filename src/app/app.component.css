@@ -6,12 +6,3 @@
     justify-content: center;
     align-items: center;
 }
-
-section {
-    width: 100%;
-    background-color: var(--first_color);
-}
-
-@media (max-width: 768px) {
-    
-}

@@ -42,7 +42,11 @@ export class AppComponent implements OnInit, OnDestroy  {
       this.authService.userInfo().subscribe(
         (data) => {
           this.authService.setUser(data);
-          this.loading = false
+
+          setTimeout(() => {
+            this.loading = false
+          }, 1500);
+          
         },
         error => {
           console.warn(error);
