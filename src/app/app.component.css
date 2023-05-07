@@ -9,14 +9,9 @@
 
 section {
     width: 100%;
-    height: auto;
     background-color: var(--first_color);
 }
 
 @media (max-width: 768px) {
     
-    section {
-        overflow: auto;
-    }
-
 }
