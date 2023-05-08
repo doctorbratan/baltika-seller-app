@@ -4,7 +4,7 @@ import { PositionService } from 'src/app/services/position.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 
 @Component({
-  selector: 'app-storage-edit',
+  selector: 'app-storage',
   templateUrl: './storage.component.html',
   styleUrls: ['./storage.component.css']
 })
@@ -19,7 +19,7 @@ export class StorageComponent implements OnInit {
   positions: any[] | undefined
   position: any
 
-  storage: any[] = []
+  quantity: number | undefined
 
   constructor(
     private snackbar: SnackbarService,
@@ -30,105 +30,40 @@ export class StorageComponent implements OnInit {
     this.getPositions()
   }
 
-  checkBeforeUpdate() {
 
-    for (const position of this.storage) {
-      if (!position.quantity) {
-        return false
-      }
-    }
+  updateStorage() {
 
-    return true
-
-  }
-
-  async updateStorage() {
     this.pennding = true;
 
-    try {
+    const query = { $inc: { quantity: this.quantity } };
 
-      for (let i = 0; i < this.storage.length;) {
+    if (this.position) {
 
-        const position = this.storage[i];
-        const query = { $inc: { quantity: position.quantity } };
-
-        try {
-          const data = await this.positionService.storage(query, position._id).toPromise();
-          const candidate = this.storage.findIndex((item: any) => item._id === position._id)
-          if (candidate || candidate === 0) {
-            this.storage.splice(candidate, 1)
-          }
-        } catch (error) {
-          this.snackbar.open(`Ошибка: [${position.category.name}] ${position.name}`);
-          return;
+      this.positionService.storage(query, this.position._id).subscribe(
+        data => {
+          this.snackbar.open(`Склад обновлен!`);
+          this.clear();
+          this.pennding = false
+        },
+        error => {
+          console.warn(error)
+          this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+          this.pennding = false
         }
+      )
 
-      }
-
-      this.snackbar.open(`Склад обновлен!`);
-      this.pennding = false
-
-    } catch (error) {
-      this.pennding = false
-    }
-
-    /*   
-    try {
-      for (let i = 0; i < this.storage.length; i++) {
-
-        const position = this.storage[i];
-        const query = { $inc: { quantity: position.quantity } };
-  
-        try {
-          const data = await this.positionService.storage(query, position._id).toPromise();
-          const candidate = this.storage.findIndex((item: any) => item._id === position._id)
-          if (candidate || candidate === 0) {
-            this.storage.splice(candidate, 1)
-          }
-        } catch (error) {
-          this.snackbar.open(`Ошибка: [${position.category.name}] ${position.name}`);
-        }
-        
-      }
-  
-      this.pennding = false
-      this.snackbar.open("Склад обновлен!")
-    } catch (e) {
-      this.pennding = false
-    } 
-    */
-
-  }
-
-  add() {
-    this.pennding = true
-
-    const candidate = this.storage.find((position: any) => position._id === this.position._id)
-
-    if (candidate) {
-      candidate.quantity++
     } else {
-      const item = {
-        _id: this.position._id,
-        category: this.position.category,
-        name: this.position.name,
-        quantity: 1
-      }
-
-      this.storage.push(item)
+      this.clear();
+      this.pennding = false
     }
 
-    this.pennding = false
-
   }
 
-  remove(i: number) {
-    this.pennding = true
-
-    this.storage.splice(i, 1)
-
-    this.pennding = false
+  clear() {
+    this.quantity = undefined
+    this.position = undefined
   }
+
 
   getPositions() {
     this.loading = true

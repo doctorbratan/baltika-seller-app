@@ -315,17 +315,27 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   getPositions() {
-    const query = { visible: true }
+    
+    if (this.positionService.positions) {
 
-    this.positionService.get(query, null, null).subscribe(
-      data => {
-        this.positions = data
-      },
-      error => {
-        console.warn(error)
-        this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
-      }
-    )
+      this.positions = this.positionService.positions
+      
+    } else {
+
+      const query = { visible: true }
+
+      this.positionService.get(query, null, null).subscribe(
+        data => {
+          this.positions = data
+        },
+        error => {
+          console.warn(error)
+          this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+        }
+      )
+
+    }
+ 
   }
 
   getCustomers() {

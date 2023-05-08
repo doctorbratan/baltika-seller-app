@@ -1,0 +1,33 @@
+<section>
+    <header>
+
+        <mat-icon 
+        aria-hidden="false" 
+        aria-label="Аккаунт" 
+        fontIcon="account_circle">
+        </mat-icon>
+        &nbsp;
+
+        <b>{{authService.user.name}}</b>
+
+        &nbsp;
+        <mat-icon 
+        (click)="authService.logout()"
+        class="pointer add-icon"
+        aria-hidden="false" 
+        aria-label="Выйти" 
+        fontIcon="logout">
+        </mat-icon>
+
+    </header>
+    <span id="update-container">
+        <mat-icon 
+        (click)="restart_alt()"
+        class="pointer add-icon"
+        aria-hidden="false" 
+        aria-label="Перезагрузить" 
+        fontIcon="restart_alt">
+        </mat-icon>
+    </span>
+
+</section>

@@ -47,6 +47,7 @@ import { ListComponent } from './seller-layout/list/list.component';
 import { PaymentComponent } from './seller-layout/payment/payment.component';
 import { StorageComponent } from './seller-layout/storage/storage.component';
 import { IonicModule } from '@ionic/angular';
+import { SettingsComponent } from './seller-layout/settings/settings.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { IonicModule } from '@ionic/angular';
     OrderComponent,
     ListComponent,
     PaymentComponent,
-    StorageComponent
+    StorageComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

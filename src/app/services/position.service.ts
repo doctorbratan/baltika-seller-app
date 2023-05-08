@@ -9,6 +9,8 @@ import { environment } from "../../environments/environment";
 })
 export class PositionService {
 
+  public positions: any[] | undefined
+
   constructor(private http: HttpClient) { }
 
   findOne(_id: string): Observable<any> {

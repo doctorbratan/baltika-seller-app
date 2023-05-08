@@ -1,0 +1,34 @@
+section {
+    width: 100%;
+    min-height: calc(99vh - var(--footer_heigth));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    padding: 10px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid white;
+}
+
+#update-container {
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+    border-bottom: 1px solid white;
+}
+
+@media (max-width: 768px) {
+
+    header {
+        justify-content:  space-evenly;
+    }
+
+}
