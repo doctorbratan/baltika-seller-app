@@ -137,13 +137,15 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     if (!position.processed) {
 
-      const dialogRef = this.dialog.open(CommentItemComponent, {
-        data: undefined,
+      this.dialog.open(CommentItemComponent, {
+        data: position.comment,
       });
 
-      dialogRef.afterClosed().subscribe(result => {
+     /*  
+     dialogRef.afterClosed().subscribe(result => {
         position.comment = result
-      });
+      }); 
+      */
 
     }
     
