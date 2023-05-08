@@ -190,8 +190,12 @@
                             X
                         </b>
                     </td>
-                    <td>
+                    <td (click)="addComment(i)">
                         [ {{position.category.name}} ] {{position.name}}
+                        <ng-container *ngIf="position.comment">
+                            &nbsp;&nbsp;
+                            {{position.comment}}
+                        </ng-container>
                         <b *ngIf="position.processed" style="color: white;">
                             &nbsp;
                             ✓

@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { RemoveItemComponent } from "../../dialogs/remove-item/remove-item.component";
+import { CommentItemComponent } from "../../dialogs/comment-item/comment-item.component";
 
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -129,6 +130,23 @@ export class OrderComponent implements OnInit, OnDestroy {
       this.pennding = false
       this.snackbar.open("Для начала сохрните чек!")
     }
+  }
+
+  addComment(i: number): void {
+    const position = this.orderService.list[i]
+
+    if (!position.processed) {
+
+      const dialogRef = this.dialog.open(CommentItemComponent, {
+        data: undefined,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        position.comment = result
+      });
+
+    }
+    
   }
 
 

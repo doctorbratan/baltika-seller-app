@@ -23,6 +23,7 @@ import { OrderFilterPipe } from "./pipes/order-filter.pipe";
 
 // Диалоговые окна
 import { RemoveItemComponent } from './dialogs/remove-item/remove-item.component';
+import { CommentItemComponent } from './dialogs/comment-item/comment-item.component';
 
 // Marerial
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -55,6 +56,7 @@ import { SettingsComponent } from './seller-layout/settings/settings.component';
     AppComponent,
 
     RemoveItemComponent,
+    CommentItemComponent,
 
     OrderFilterPipe,
     PositionFilterPipe,
