@@ -19,19 +19,19 @@ export class SettingsService {
   }
 
   order(data: any, path: string): Observable<any> {
-    return this.http.post<any>(`http://${path}:3000/printer/order`, data)
+    return this.http.post<any>(`https://${path}:3000/printer/order`, data, {withCredentials: true})
   }
 
   task(data: any, path: string): Observable<any> {
-    return this.http.post<any>(`http://${path}:3000/printer/task`, data)
+    return this.http.post<any>(`https://${path}:3000/printer/task`, data, {withCredentials: true})
   }
 
   checkServer(path: string): Observable<any> {
-    return this.http.get<any>(`http://${path}:3000/`)
+    return this.http.get<any>(`http://${path}:3000/`, {withCredentials: true})
   }
 
   checkPrinter(path: string, name: string): Observable<any> {
-    return this.http.get<any>(`http://${path}:3000/printer/${name}`)
+    return this.http.get<any>(`https://${path}:3000/printer/${name}`, {withCredentials: true})
   }
 
 }
