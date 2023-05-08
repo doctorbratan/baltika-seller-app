@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -7,14 +8,21 @@ import { SettingsService } from 'src/app/services/settings.service';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
+
+  currentUrl: any;
 
   server: any
   
   constructor (
+    private location: Location,
     public authService: AuthService,
     public settingsService: SettingsService
   ) {}
+
+  ngOnInit(): void {
+    this.currentUrl = location.href
+  }
 
   restart_alt() {
     localStorage.removeItem('positions');
