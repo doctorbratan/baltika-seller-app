@@ -157,14 +157,12 @@ table.GeneratedTable th {
 
    
     #positons-container {
-        /*   
-        overflow: auto;
-        width: 100%;
-        display: flex;
-        flex-direction: column; 
-        */
         max-height: 300px;
     } 
+
+    .position-name-b {
+        font-size: 12px;
+    }
 
 
     .position {

@@ -29,5 +29,19 @@
         fontIcon="restart_alt">
         </mat-icon>
     </span>
-
+    <div id="server" *ngIf="settingsService.server">
+        <b>Сервер для печати: {{settingsService.server}} | </b>
+        <ng-container *ngIf="server">
+            &nbsp;
+            <b class="active">{{server}}</b>
+        </ng-container>
+        <ng-container *ngIf="server == false">
+            &nbsp;
+            <b class="active">Не в сети</b>
+        </ng-container>
+        &nbsp;
+        <button mat-raised-button color="primary" (click)="checkServer()">Проверить</button>
+    </div>
+    <h1 *ngIf="!settingsService.server">Сервер для печати не установлен!</h1>
+   
 </section>

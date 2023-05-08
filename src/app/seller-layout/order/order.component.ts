@@ -12,6 +12,7 @@ import { OrderService } from 'src/app/services/order.service';
 import { PositionService } from 'src/app/services/position.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { WriteOffService } from 'src/app/services/write-off.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-order',
@@ -46,6 +47,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     private positionService: PositionService,
     private customerService: CustomerService,
     private writeOffService: WriteOffService,
+    private settingsService: SettingsService,
 
     public orderService: OrderService
   ) { }
@@ -96,6 +98,8 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.orderService.clear();
   }
 
+  // Блок печати
+
   print() {
     this.pennding = true
     let response = true
@@ -107,45 +111,101 @@ export class OrderComponent implements OnInit, OnDestroy {
     }
 
     if (response) {
-      const data = {
-        list: this.orderService.list,
-        update: this.orderService.update,
-        updates: this.orderService.updates,
-        status: this.orderService.status,
-        isPrinted: true
-      }
-      
-      this.orderService.patch(data, this.orderService._id!).subscribe(
-        data => {
-          this.orderService.unZipOrder(data.order)
-          this.pennding = false
-        },
-        error => {
-          console.warn(error)
-          this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
-          this.pennding = false
-        }
-      )
+      this.checkPrintServer();
     } else {
       this.pennding = false
       this.snackbar.open("Для начала сохрните чек!")
     }
   }
 
+  checkPrintServer() {
+
+    this.settingsService.checkServer(this.settingsService.server!).subscribe(
+      data => {
+        this.checkPrinterForCheck();
+      },
+      error => {
+        this.pennding = false
+        this.snackbar.open("Нет доступа к серверу печати!")
+      }
+    )
+
+  }
+
+  checkPrinterForCheck() {
+    if (this.settingsService.printers && this.settingsService.printers.check) {
+
+      this.settingsService.checkPrinter(this.settingsService.server!, this.settingsService.printers.check.name).subscribe(
+        data => {
+          this.printCheck();
+        },
+        error => {
+          this.pennding = false
+          this.snackbar.open("Принтер для печати чеков не в сети!")
+        }
+      )
+
+    } else {
+      this.pennding = false
+      this.snackbar.open("Не выставлен принтер для печати чеков!")
+    }
+  }
+
+  printCheck() {
+
+    const data = {
+      order: this.orderService.zipOrder(),
+      printer: this.settingsService.printers.check
+    }
+
+    this.settingsService.order(data, this.settingsService.server!).subscribe(
+      data => {
+        this.savePrintedOrder();
+      },
+      error => {
+        this.snackbar.open("Ошибка печати чека!");
+        this.pennding = false
+
+      }
+    )
+
+  }
+
+  savePrintedOrder() {
+
+    let data = this.orderService.zipOrder();
+    data.isPrinted = true
+
+    this.orderService.patch(data, this.orderService._id!).subscribe(
+      data => {
+        this.orderService.unZipOrder(data.order)
+        this.pennding = false
+      },
+      error => {
+        console.warn(error)
+        this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+        this.pennding = false
+      }
+    )
+  }
+
+// Блок печати
+
   addComment(i: number): void {
     const position = this.orderService.list[i]
 
     if (!position.processed) {
 
-      this.dialog.open(CommentItemComponent, {
-        data: position.comment,
+      const dialogRef = this.dialog.open(CommentItemComponent, {
+        data: position.comment ? position.comment : undefined,
       });
 
-     /*  
+ 
      dialogRef.afterClosed().subscribe(result => {
+        console.log(result)
         position.comment = result
       }); 
-      */
+
 
     }
     
@@ -227,6 +287,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       this.pennding = false
       this.snackbar.open(response.message)
     } else {
+      this.checkTasks(data)
       this.orderService.post(data).subscribe(
         data => {
           this.snackbar.open(data.message)
@@ -255,6 +316,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       this.pennding = false
       this.snackbar.open(response.message)
     } else {
+      this.checkTasks(data)
       this.orderService.patch(data, this.orderService._id!).subscribe(
         data => {
           this.snackbar.open(data.message)
@@ -270,6 +332,86 @@ export class OrderComponent implements OnInit, OnDestroy {
       )
     }
 
+  }
+
+  checkTasks(data: any) {
+    const kitchenTasks = []
+    const barTasks = []
+
+    for (let position of data.list) {
+      if (!position.processed && position.task) {
+        if (position.task === 'bar') {
+          barTasks.push(position)
+        }
+        if (position.task === 'kitchen') {
+          kitchenTasks.push(position)
+        }
+      }
+    }
+
+    if (kitchenTasks.length > 0) {
+      this.kitchenTasks(kitchenTasks, data)
+    }
+
+    if (barTasks.length > 0) {
+      this.barTasks(barTasks, data)
+    }
+
+  }
+
+  kitchenTasks(positions: any[], data: any) {
+    let text = "Задачи кухни: \n\n"
+
+    for (let position of positions) {
+      let positionText;
+      if (position.comment) {
+        positionText = `[ ${position.category.name} ] ${position.name} - ${position.quantity} шт. \nКомментарий: ${position.comment} \n\n`;
+      } else {
+        positionText = `[ ${position.category.name} ] ${position.name} - ${position.quantity} шт. \n\n`;
+      }
+      text = text.concat(positionText);
+    }
+
+    text = text.concat(`От: ${data.seller.name} \nCтол: ${data.order_for.name}`)
+
+    if (this.settingsService.server && this.settingsService.printers && this.settingsService.printers.kitchen) {
+      this.settingsService.task({ printer: this.settingsService.printers.kitchen.name, text: text }, this.settingsService.server).subscribe(
+        data => {
+
+        },
+        error => {
+          this.snackbar.open("Ошибка печати на кухне!")
+        }
+      )
+    }
+
+  }
+
+  barTasks(positions: any[], data: any) {
+    let text = "Задачи бара: \n\n"
+
+    for (let position of positions) {
+      let positionText;
+      if (position.comment) {
+        positionText = `[ ${position.category.name} ] ${position.name} - ${position.quantity} шт. \nКомментарий: ${position.comment} \n\n`;
+      } else {
+        positionText = `[ ${position.category.name} ] ${position.name} - ${position.quantity} шт. \n\n`;
+      }
+      text = text.concat(positionText);
+    }
+
+    text = text.concat(`От: ${data.seller.name} \nCтол: ${data.order_for.name}`)
+
+    if (this.settingsService.server && this.settingsService.printers && this.settingsService.printers.bar) {
+      this.settingsService.task({ printer: this.settingsService.printers.bar.name, text: text }, this.settingsService.server).subscribe(
+        data => {
+
+        },
+        error => {
+          this.snackbar.open("Ошибка печати на баре!")
+        }
+      )
+    }
   }
 
   delete() {

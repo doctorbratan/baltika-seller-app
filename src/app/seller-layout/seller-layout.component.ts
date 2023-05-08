@@ -5,6 +5,7 @@ import { PositionService } from '../services/position.service';
 import { SnackbarService } from '../services/snackbar.service';
 import { CategoryService } from '../services/category.service';
 import { CustomerService } from '../services/customer.service';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-seller-layout',
@@ -19,13 +20,13 @@ export class SellerLayoutComponent implements OnInit {
   constructor (
     public authService: AuthService,
     private positionService: PositionService,
-    private categoryService: CategoryService,
-    private customerService: CustomerService,
+    private settingsService: SettingsService,
     private snackbar: SnackbarService
   ) {}
 
   ngOnInit(): void {
     this.checkPositions();
+    this.checkSettings();
   }
 
   checkPositions() {
@@ -43,6 +44,39 @@ export class SellerLayoutComponent implements OnInit {
           localStorage.setItem('positions', JSON.stringify(data))
         },
         error => {
+          console.warn(error)
+          this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+        }
+      )
+
+    }
+
+  }
+
+  checkSettings() {
+
+    const candidate = localStorage.getItem('settings')
+    if (candidate) {
+      const data = JSON.parse(candidate)
+      if (data.server) {
+        this.settingsService.server = data.server
+      }
+      if (data.printers) {
+        this.settingsService.printers = data.printers
+      }
+    } else {
+
+      this.settingsService.get().subscribe(
+        data => {
+          this.settingsService.server = data.server
+          this.settingsService.printers = data.printers
+          const local_save = {
+            server: data.server,
+            printers: data.printers
+          }
+          localStorage.setItem('settings', JSON.stringify(local_save))
+        },
+        error => { 
           console.warn(error)
           this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
         }

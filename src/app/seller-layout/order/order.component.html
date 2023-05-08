@@ -42,7 +42,7 @@
             <span *ngFor="let position of positions | positionFilter: {category, cost, filterText}" class="position">
                 <span class="position-name">
                     <b>[ {{position.category.name}} ]</b>
-                    <b>{{position.name}}</b>
+                    <b class="position-name-b">{{position.name}}</b>
                 </span>
                 <span *ngIf="!orderService.isPrinted" class="position-add">
                     <button 

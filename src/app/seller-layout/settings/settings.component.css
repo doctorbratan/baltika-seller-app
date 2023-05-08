@@ -25,6 +25,19 @@ header {
     border-bottom: 1px solid white;
 }
 
+#server {
+    width: 100%;
+    min-height: 50px;
+    padding: 10px 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid white;
+}
+
+
+
 @media (max-width: 768px) {
 
     header {
