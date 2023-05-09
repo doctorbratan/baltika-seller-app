@@ -120,7 +120,7 @@ export class OrderComponent implements OnInit, OnDestroy {
 
   checkPrintServer() {
 
-    this.settingsService.checkServer(this.settingsService.server!).subscribe(
+    this.settingsService.checkServer().subscribe(
       data => {
         this.checkPrinterForCheck();
       },
@@ -135,7 +135,7 @@ export class OrderComponent implements OnInit, OnDestroy {
   checkPrinterForCheck() {
     if (this.settingsService.printers && this.settingsService.printers.check) {
 
-      this.settingsService.checkPrinter(this.settingsService.server!, this.settingsService.printers.check.name).subscribe(
+      this.settingsService.checkPrinter(this.settingsService.printers.check.name).subscribe(
         data => {
           this.printCheck();
         },
@@ -158,7 +158,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       printer: this.settingsService.printers.check
     }
 
-    this.settingsService.order(data, this.settingsService.server!).subscribe(
+    this.settingsService.order(data).subscribe(
       data => {
         this.savePrintedOrder();
       },
@@ -375,7 +375,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     text = text.concat(`От: ${data.seller.name} \nCтол: ${data.order_for.name}`)
 
     if (this.settingsService.server && this.settingsService.printers && this.settingsService.printers.kitchen) {
-      this.settingsService.task({ printer: this.settingsService.printers.kitchen.name, text: text }, this.settingsService.server).subscribe(
+      this.settingsService.task({ printer: this.settingsService.printers.kitchen.name, text: text }).subscribe(
         data => {
 
         },
@@ -383,6 +383,8 @@ export class OrderComponent implements OnInit, OnDestroy {
           this.snackbar.open("Ошибка печати на кухне!")
         }
       )
+    } else {
+      this.snackbar.open("Не установлен сервер или принетер для кухни!")
     }
 
   }
@@ -403,7 +405,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     text = text.concat(`От: ${data.seller.name} \nCтол: ${data.order_for.name}`)
 
     if (this.settingsService.server && this.settingsService.printers && this.settingsService.printers.bar) {
-      this.settingsService.task({ printer: this.settingsService.printers.bar.name, text: text }, this.settingsService.server).subscribe(
+      this.settingsService.task({ printer: this.settingsService.printers.bar.name, text: text }).subscribe(
         data => {
 
         },
@@ -411,6 +413,8 @@ export class OrderComponent implements OnInit, OnDestroy {
           this.snackbar.open("Ошибка печати на баре!")
         }
       )
+    } else {
+      this.snackbar.open("Не установлен сервер или принетер для бара!")
     }
   }
 

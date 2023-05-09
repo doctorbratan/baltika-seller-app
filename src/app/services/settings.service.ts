@@ -18,20 +18,25 @@ export class SettingsService {
     return this.http.get<any>(`${environment.apiURL}/api/settings`);
   }
 
-  order(data: any, path: string): Observable<any> {
-    return this.http.post<any>(`${path}/printer/order`, data)
+  order(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiURL}/api/printer/order`, data)
   }
 
-  task(data: any, path: string): Observable<any> {
-    return this.http.post<any>(`${path}/printer/task`, data)
+  task(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiURL}/api/printer/task`, data)
   }
 
-  checkServer(path: string): Observable<any> {
-    return this.http.get<any>(`${path}/`)
+  checkServer(): Observable<any> {
+    return this.http.get<any>(`${environment.apiURL}/api/printer/checkServer`)
   }
 
-  checkPrinter(path: string, name: string): Observable<any> {
-    return this.http.get<any>(`${path}/printer/${name}`)
+  checkPrinter(name: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiURL}/api/printer/${name}`)
   }
+
+  getPrinters(): Observable<any> {
+    return this.http.get<any>(`${environment.apiURL}/api/printer`)
+  }
+
 
 }
