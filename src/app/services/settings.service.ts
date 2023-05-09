@@ -9,7 +9,7 @@ import { environment } from "../../environments/environment";
 })
 export class SettingsService {
 
-  public server: string | undefined
+  public server: string | undefined = "http://192.168.100.85:3000"
   public printers: any
 
   constructor(private http: HttpClient) { }
@@ -19,11 +19,13 @@ export class SettingsService {
   }
 
   order(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiURL}/api/printer/order`, data)
+    // return this.http.post<any>(`${environment.apiURL}/api/printer/order`, data)
+    return this.http.post<any>(`${this.server}/printer/order`, data)
   }
 
   task(data: any): Observable<any> {
-    return this.http.post<any>(`${environment.apiURL}/api/printer/task`, data)
+    // return this.http.post<any>(`${environment.apiURL}/api/printer/task`, data)
+    return this.http.post<any>(`${this.server}/printer/task`, data)
   }
 
   checkServer(): Observable<any> {
@@ -32,11 +34,13 @@ export class SettingsService {
   }
 
   checkPrinter(name: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiURL}/api/printer/${name}`)
+    //return this.http.get<any>(`${environment.apiURL}/api/printer/${name}`)
+    return this.http.get<any>(`${this.server}/printer/${name}`)
   }
 
   getPrinters(): Observable<any> {
-    return this.http.get<any>(`${environment.apiURL}/api/printer`)
+    //return this.http.get<any>(`${environment.apiURL}/api/printer`)
+    return this.http.get<any>(`${this.server}/printer`)
   }
 
 
