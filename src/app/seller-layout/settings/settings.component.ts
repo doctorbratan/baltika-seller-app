@@ -37,6 +37,8 @@ export class SettingsComponent implements OnInit {
       },
       error => {
         this.server = false
+        alert(error)
+        console.log(error)
       }
     )
   }
