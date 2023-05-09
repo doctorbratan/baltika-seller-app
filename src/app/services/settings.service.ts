@@ -27,7 +27,8 @@ export class SettingsService {
   }
 
   checkServer(): Observable<any> {
-    return this.http.get<any>(`${environment.apiURL}/api/printer/checkServer`)
+    //return this.http.get<any>(`${environment.apiURL}/api/printer/checkServer`)
+    return this.http.get<any>(`${this.server}/`)
   }
 
   checkPrinter(name: string): Observable<any> {
