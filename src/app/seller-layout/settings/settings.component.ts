@@ -10,7 +10,6 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 export class SettingsComponent implements OnInit {
 
-  currentUrl: any;
 
   server: any
   
@@ -21,7 +20,6 @@ export class SettingsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentUrl = location.href
   }
 
   restart_alt() {
@@ -31,7 +29,7 @@ export class SettingsComponent implements OnInit {
   }
 
   checkServer() {
-    this.settingsService.checkServer(this.settingsService.server!).subscribe(
+    this.settingsService.checkServer().subscribe(
       data => {
         this.server = "В сети"
       },
