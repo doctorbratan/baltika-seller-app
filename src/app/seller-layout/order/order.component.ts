@@ -189,7 +189,7 @@ export class OrderComponent implements OnInit, OnDestroy {
     )
   }
 
-// Блок печати
+  // Блок печати
 
   addComment(i: number): void {
     const position = this.orderService.list[i]
@@ -200,15 +200,15 @@ export class OrderComponent implements OnInit, OnDestroy {
         data: position.comment ? position.comment : undefined,
       });
 
- 
-     dialogRef.afterClosed().subscribe(result => {
+
+      dialogRef.afterClosed().subscribe(result => {
         console.log(result)
         position.comment = result
-      }); 
+      });
 
 
     }
-    
+
   }
 
 
@@ -221,7 +221,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(RemoveItemComponent, {
         data: undefined,
       });
-  
+
       dialogRef.afterClosed().subscribe(result => {
 
         if (result) {
@@ -235,10 +235,11 @@ export class OrderComponent implements OnInit, OnDestroy {
 
           this.writeOffService.patch(data, this.orderService._id!).subscribe(
             data => {
+              this.deletePositionSend(position)
               this.snackbar.open(data.message)
               this.orderService.unZipOrder(data.order)
               this.pennding = false
-            }, 
+            },
             error => {
               console.warn(error)
               this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
@@ -246,7 +247,7 @@ export class OrderComponent implements OnInit, OnDestroy {
             }
           )
 
-        }  else {
+        } else {
           this.pennding = false
         }
 
@@ -355,6 +356,50 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     if (barTasks.length > 0) {
       this.barTasks(barTasks, data)
+    }
+
+  }
+
+  deletePositionSend(position: any) {
+
+    let text = "!!Отмена!!: \n\n"
+    let positionText;
+    if (position.comment) {
+      positionText = `[ ${position.category.name} ] ${position.name} - ${position.quantity} шт. \nКомментарий: ${position.comment} \n\n`;
+    } else {
+      positionText = `[ ${position.category.name} ] ${position.name} - ${position.quantity} шт. \n\n`;
+    }
+    text = text.concat(positionText);
+    text = text.concat(`От: ${this.orderService.seller.name} \nCтол: ${this.orderService.order_for.name}`)
+
+    if (position.task === "bar") {
+
+      if (this.settingsService.server && this.settingsService.printers && this.settingsService.printers.bar) {
+        this.settingsService.task({ printer: this.settingsService.printers.bar.name, text: text }).subscribe(
+          data => {
+          },
+          error => {
+            this.snackbar.open("Ошибка печати на баре!")
+          }
+        )
+      } else {
+        this.snackbar.open("Не установлен сервер или принетер для бара!")
+      }
+
+    }
+
+    if (position.task === "kitchen") {
+      if (this.settingsService.server && this.settingsService.printers && this.settingsService.printers.kitchen) {
+        this.settingsService.task({ printer: this.settingsService.printers.kitchen.name, text: text }).subscribe(
+          data => {
+          },
+          error => {
+            this.snackbar.open("Ошибка печати на кухне!")
+          }
+        )
+      } else {
+        this.snackbar.open("Не установлен сервер или принетер для кухни!")
+      }
     }
 
   }
@@ -481,11 +526,11 @@ export class OrderComponent implements OnInit, OnDestroy {
   }
 
   getPositions() {
-    
+
     if (this.positionService.positions) {
 
       this.positions = this.positionService.positions
-      
+
     } else {
 
       const query = { visible: true }
@@ -501,7 +546,7 @@ export class OrderComponent implements OnInit, OnDestroy {
       )
 
     }
- 
+
   }
 
   getCustomers() {

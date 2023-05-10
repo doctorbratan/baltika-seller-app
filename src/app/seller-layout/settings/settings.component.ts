@@ -33,6 +33,15 @@ export class SettingsComponent implements OnInit {
     }
   }
 
+  zipSettings() {
+    const data = {
+      server: this.settingsService.server ? this.settingsService.server : undefined,
+      printers: this.settingsService.printers ? this.settingsService.printers : undefined
+    }
+
+    localStorage.setItem('settings', JSON.stringify(data))
+  }
+
   restart_alt() {
     localStorage.removeItem('positions');
     localStorage.removeItem('settings')
@@ -61,7 +70,8 @@ export class SettingsComponent implements OnInit {
       this.settingsService.patch(query, this._id!).subscribe(
         data => {
           this.snackbar.open(data.message)
-          this.printers = data.settings.printers
+          this.settingsService.printers = data.settings.printers
+          this.zipSettings();
           this.pennding = false
         },
         error => {
@@ -134,6 +144,7 @@ export class SettingsComponent implements OnInit {
         this.snackbar.open(data.message)
         this.settingsService.server = data.settings.server
         this.checkServer();
+        this.zipSettings();
         this.pennding = false
       },
       error => {
