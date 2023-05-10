@@ -90,7 +90,7 @@
         [disabled]="pennding"
         class="printer-button" mat-raised-button color="primary">Проверить</button>
 
-        <ng-container *ngIf="settingsService.printers.check.status">
+        <ng-container *ngIf="settingsService.printers.check && settingsService.printers.check.status">
             &nbsp;
             <b class="active">{{settingsService.printers.check.status}}</b>
         </ng-container>
@@ -128,7 +128,7 @@
         [disabled]="pennding"
         class="printer-button" mat-raised-button color="primary">Проверить</button>
 
-        <ng-container *ngIf="settingsService.printers.bar.status">
+        <ng-container *ngIf="settingsService.printers.bar && settingsService.printers.bar.status">
             &nbsp;
             <b class="active">{{settingsService.printers.bar.status}}</b>
         </ng-container>
@@ -166,7 +166,7 @@
         (click)="checkPrinter(settingsService.printers.kitchen)"
         class="printer-button" mat-raised-button color="primary">Проверить</button>
 
-        <ng-container *ngIf="settingsService.printers.kitchen.status">
+        <ng-container *ngIf="settingsService.printers.kitchen && settingsService.printers.kitchen.status">
             &nbsp;
             <b class="active">{{settingsService.printers.kitchen.status}}</b>
         </ng-container>
