@@ -10,12 +10,16 @@ import { environment } from "../../environments/environment";
 export class SettingsService {
 
   public server: string | undefined = "http://192.168.100.85:3000"
-  public printers: any
+  public printers: any = { }
 
   constructor(private http: HttpClient) { }
 
   get(): Observable<any> {
     return this.http.get<any>(`${environment.apiURL}/api/settings`);
+  }
+
+  patch(data: any, _id: string): Observable<any> {
+    return this.http.patch<any>(`${environment.apiURL}/api/settings/${_id}`, data)
   }
 
   order(data: any): Observable<any> {

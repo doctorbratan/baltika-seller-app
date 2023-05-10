@@ -1,4 +1,5 @@
 <section>
+
     <header>
 
         <mat-icon 
@@ -20,6 +21,7 @@
         </mat-icon>
 
     </header>
+
     <span id="update-container">
         <mat-icon 
         (click)="restart_alt()"
@@ -28,20 +30,201 @@
         aria-label="Перезагрузить" 
         fontIcon="restart_alt">
         </mat-icon>
+        <br>
+        <b>Обновить данные</b>
     </span>
-    <div id="server" *ngIf="settingsService.server">
-        <b>Сервер для печати: {{settingsService.server}} | </b>
+
+    <div id="server-container">
+
+        <mat-form-field class="server-input">
+            <mat-label>Сервер для печати:</mat-label>
+            <input 
+            matInput [disabled]="!authService.user || authService.user.status === 'seller' " 
+            [(ngModel)]="settingsService.server" >
+        </mat-form-field>
+
         <ng-container *ngIf="server">
-            &nbsp;
             <b class="active">{{server}}</b>
+            &nbsp;&nbsp;
         </ng-container>
-        <ng-container *ngIf="server == false">
-            &nbsp;
-            <b class="active">Не в сети</b>
-        </ng-container>
-        &nbsp;
-        <button mat-raised-button color="primary" (click)="checkServer()">Проверить</button>
+
+
+        <span id="server-button-container">
+            <button mat-raised-button color="primary" (click)="checkServer()">Проверить</button>
+            <ng-container *ngIf="authService.user && authService.user.status !== 'seller' ">
+                &nbsp;
+                <button mat-raised-button color="accent" (click)="changeServer()">Изменить</button>
+            </ng-container>
+        </span>
+
     </div>
-    <h1 *ngIf="!settingsService.server">Сервер для печати не установлен!</h1>
+
+    <div class="printer-container">
+        <h3>Принтер для чеков:</h3>
+
+        <span *ngIf="settingsService.printers.check" class="flex-column-center">
+            <span class="flex-column-center">
+                <b>Название:</b>
+                <b class="active">{{settingsService.printers.check.name}}</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Драйвер:</b>
+                <b class="active">{{settingsService.printers.check.driverName}}</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Ширина:</b>
+                <b class="active">{{settingsService.printers.check.width}} mm.</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Высота:</b>
+                <b class="active">{{settingsService.printers.check.height}} mm.</b>
+            </span>
+        </span>
+
+        <ng-container *ngIf="!settingsService.printers.check">
+            <b>Не установлен!</b>
+        </ng-container>
+
+        <button *ngIf="settingsService.printers.check" 
+        (click)="checkPrinter(settingsService.printers.check)"
+        [disabled]="pennding"
+        class="printer-button" mat-raised-button color="primary">Проверить</button>
+
+        <ng-container *ngIf="settingsService.printers.check.status">
+            &nbsp;
+            <b class="active">{{settingsService.printers.check.status}}</b>
+        </ng-container>
+
+    </div>
+
+    <div class="printer-container">
+        <h3>Принтер для бара:</h3>
+
+        <span *ngIf="settingsService.printers.bar" class="flex-column-center">
+            <span class="flex-column-center">
+                <b>Название:</b>
+                <b class="active">{{settingsService.printers.bar.name}}</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Драйвер:</b>
+                <b class="active">{{settingsService.printers.bar.driverName}}</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Ширина:</b>
+                <b class="active">{{settingsService.printers.bar.width}} mm.</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Высота:</b>
+                <b class="active">{{settingsService.printers.bar.height}} mm.</b>
+            </span>
+        </span>
+
+        <ng-container *ngIf="!settingsService.printers.bar">
+            <b>Не установлен!</b>
+        </ng-container>
+
+        <button *ngIf="settingsService.printers.bar"
+        (click)="checkPrinter(settingsService.printers.bar)"
+        [disabled]="pennding"
+        class="printer-button" mat-raised-button color="primary">Проверить</button>
+
+        <ng-container *ngIf="settingsService.printers.bar.status">
+            &nbsp;
+            <b class="active">{{settingsService.printers.bar.status}}</b>
+        </ng-container>
+
+    </div>
+
+    <div class="printer-container">
+        <h3>Принтер для кухни:</h3>
+
+        <span *ngIf="settingsService.printers.kitchen" class="flex-column-center">
+            <span class="flex-column-center">
+                <b>Название:</b>
+                <b class="active">{{settingsService.printers.kitchen.name}}</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Драйвер:</b>
+                <b class="active">{{settingsService.printers.kitchen.driverName}}</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Ширина:</b>
+                <b class="active">{{settingsService.printers.kitchen.width}} mm.</b>
+            </span>
+            <span class="flex-column-center">
+                <b>Высота:</b>
+                <b class="active">{{settingsService.printers.kitchen.height}} mm.</b>
+            </span>
+        </span>
+
+        <ng-container *ngIf="!settingsService.printers.kitchen">
+            <b>Не установлен!</b>
+        </ng-container>
+
+        <button *ngIf="settingsService.printers.kitchen" 
+        [disabled]="pennding"
+        (click)="checkPrinter(settingsService.printers.kitchen)"
+        class="printer-button" mat-raised-button color="primary">Проверить</button>
+
+        <ng-container *ngIf="settingsService.printers.kitchen.status">
+            &nbsp;
+            <b class="active">{{settingsService.printers.kitchen.status}}</b>
+        </ng-container>
+
+    </div>
+
+    <div style="width: 100%;" *ngIf="authService.user && authService.user.status !== 'seller' " class="flex-column-center" >
+        <h3>Принтера Сервера:</h3>
+        <ng-container *ngIf="printers && printers.length > 0">
+
+            <div class="printer-container servers" *ngFor="let printer of printers">
+
+                <span class="flex-column-center">
+                    <span class="flex-column-center">
+                        <b>Название:</b>
+                        <b class="active">{{printer.name}}</b>
+                    </span>
+                    <span class="flex-column-center">
+                        <b>Драйвер:</b>
+                        <b class="active">{{printer.driverName}}</b>
+                    </span>
+                </span>
+
+                <span class="flex-column-center">
+                    &nbsp;&nbsp;
+                    <mat-form-field appearance="fill">
+                        <mat-label>Местоположение принтера</mat-label>
+                        <mat-select [(ngModel)]="printer.place">
+                            <mat-option value="check">Чековый</mat-option>
+                            <mat-option value="bar">Бар</mat-option>
+                            <mat-option value="kitchen">Кухня</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    &nbsp;&nbsp;
+                    <mat-form-field appearance="fill">
+                        <mat-label>Ширина (mm)</mat-label>
+                        <input matInput type="number" [(ngModel)]="printer.width">
+                    </mat-form-field>
+                    &nbsp;&nbsp;
+                    <mat-form-field appearance="fill">
+                        <mat-label>Высота (mm)</mat-label>
+                        <input matInput type="number" [(ngModel)]="printer.height">
+                    </mat-form-field>
+                    &nbsp;&nbsp;
+                </span>
+        
+
+                <button  
+                mat-raised-button color="primary" 
+                [disabled]="pennding"
+                (click)="addPrinter(printer)"
+                >Установить</button>
+        
+        
+            </div>
+
+        </ng-container>
+    </div>
+
    
 </section>

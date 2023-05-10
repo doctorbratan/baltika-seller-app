@@ -68,12 +68,19 @@ export class SellerLayoutComponent implements OnInit {
 
       this.settingsService.get().subscribe(
         data => {
-          this.settingsService.server = data.server
-          this.settingsService.printers = data.printers
-          const local_save = {
-            server: data.server,
-            printers: data.printers
+          if (data.server) {
+            this.settingsService.server = data.server
           }
+          
+          if (data.printers) {
+            this.settingsService.printers = data.printers
+          }
+
+          const local_save = {
+            server: data.server ? data.server : undefined,
+            printers: data.printers ? data.printers : undefined
+          }
+
           localStorage.setItem('settings', JSON.stringify(local_save))
         },
         error => { 
