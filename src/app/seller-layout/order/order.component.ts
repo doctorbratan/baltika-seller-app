@@ -537,7 +537,10 @@ export class OrderComponent implements OnInit, OnDestroy {
 
       this.positionService.get(query, null, null).subscribe(
         data => {
-          this.positions = data
+          this.positionService.positions = data.map( (position: any) => {
+            position.quantity = 1
+            return position
+          })
         },
         error => {
           console.warn(error)
@@ -547,6 +550,14 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     }
 
+  }
+
+  changeQuantity(position: any, type: boolean) {
+    if (type) {
+      position.quantity++
+    } else {
+      position.quantity--
+    }
   }
 
   getCustomers() {

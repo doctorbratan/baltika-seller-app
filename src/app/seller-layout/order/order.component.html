@@ -44,6 +44,24 @@
                     <b>[ {{position.category.name}} ]</b>
                     <b class="position-name-b">{{position.name}}</b>
                 </span>
+                <span class="quantity-container">
+
+                    <button 
+                    class="button-quantity"
+                    mat-raised-button
+                    (click)="changeQuantity(position, true)">+</button>
+
+                    <input type="number" class="quantity" [(ngModel)]="position.quantity" >
+
+                    <button
+                    [disabled]="position.quantity === 1" 
+                    (click)="changeQuantity(position, false)"
+                    class="button-quantity"
+                    mat-raised-button
+                    >
+                    -</button>
+
+                </span>
                 <span *ngIf="!orderService.isPrinted" class="position-add">
                     <button 
                     class="mat-element"

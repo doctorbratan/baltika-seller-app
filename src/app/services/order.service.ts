@@ -71,7 +71,7 @@ export class OrderService {
       get_cost: position.get_cost,
       personal_cost: position.personal_cost,
       cost: position.cost,
-      quantity: 1,
+      quantity: position.quantity,
       total: position.cost,
       action: position.action,
       storage: position.storage,
@@ -79,9 +79,9 @@ export class OrderService {
     })
     
     let _new = true
-    this.list.forEach( (position) => {
-      if (position._id === orderPosition._id && !position.processed) {
-        position.quantity++
+    this.list.forEach( (item) => {
+      if (item._id === orderPosition._id && !item.processed) {
+        item.quantity = item.quantity + orderPosition.quantity
         _new = false
       }
     })
@@ -90,6 +90,7 @@ export class OrderService {
       this.list.push(orderPosition)
     }
 
+    position.quantity = 1
     this.computePrice()
     this.snackbar.open("Добавленно!")
   }

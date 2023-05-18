@@ -40,7 +40,10 @@ export class SellerLayoutComponent implements OnInit {
 
       this.positionService.get(query, null, null).subscribe(
         data => {
-          this.positionService.positions = data
+          this.positionService.positions = data.map( (position: any) => {
+            position.quantity = 1
+            return position
+          })
           localStorage.setItem('positions', JSON.stringify(data))
         },
         error => {

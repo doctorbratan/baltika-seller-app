@@ -1,3 +1,7 @@
+b {
+    text-align: center;
+}
+
 section {
     width: 100%;
     min-height: calc(99vh - var(--footer_heigth));
@@ -39,21 +43,37 @@ section {
 }
 
 .position {
-    padding: 10px 0px;
+    padding: 15px 0px;
     width: 100%;
-    min-height: 50px;
+    /* min-height: 50px; */
     border-bottom: 1px solid white;
     display: flex;
-    align-items: stretch;
-    justify-content: space-around;
+    align-items: center;
     font-size: 18px;
 }
 
 .position-name {
-    flex-basis: 63%;
+    flex-basis: 35%;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+}
+
+.quantity-container {
+    flex-basis: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.quantity {
+    text-align: center;
+    width: 90%;
+    color: black;
+}
+
+.button-quantity {
+    width: 100%;
 }
 
 .position-add {
@@ -180,6 +200,10 @@ table.GeneratedTable th {
     table.GeneratedTable {
         font-size: 8px;
         width: 95%;
+    }
+
+    .position-add, .mat-element{
+        font-size: 8px;
     }
 
 
