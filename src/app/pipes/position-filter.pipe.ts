@@ -13,7 +13,7 @@ export class PositionFilterPipe implements PipeTransform {
     }
 
     if (data.cost) {
-      list.filter( item => item.cost === data.cost )
+      list = list.filter( item => item.cost == data.cost )
     }
 
     return list ? list.filter(item => item.name.search(new RegExp(data.filterText, 'i')) > -1) : [];

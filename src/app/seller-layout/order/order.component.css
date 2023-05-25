@@ -29,6 +29,7 @@ section {
 
 .query {
     width: 100%;
+    padding: 5px 0px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -36,6 +37,7 @@ section {
 }
 
 #positons-container {
+    max-height: 70vh;
     overflow: auto;
     width: 100%;
     display: flex;
@@ -171,14 +173,23 @@ table.GeneratedTable th {
 
     #position-section {
         border-right: none;
-        border-top: 1px solid white;
+        border-top: 1px solid #8633AA;
         flex-basis: auto;
+        flex-direction: column-reverse;
     }
 
-   
+    
+
+    #query-contaier {   
+        flex-direction: column-reverse;
+        border-top: 2px solid #8633AA;
+        border-bottom: none;
+    }
+
     #positons-container {
-        max-height: 300px;
-    } 
+        min-height: 150px;
+        max-height: 150px;
+    }
 
     .position-name-b {
         font-size: 12px;
@@ -191,6 +202,7 @@ table.GeneratedTable th {
 
     #order-section {
         flex-basis: auto;
+        padding-top: 15px;
     }
 
     #list-container { 
