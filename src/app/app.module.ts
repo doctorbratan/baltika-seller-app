@@ -49,6 +49,7 @@ import { PaymentComponent } from './seller-layout/payment/payment.component';
 import { StorageComponent } from './seller-layout/storage/storage.component';
 import { IonicModule } from '@ionic/angular';
 import { SettingsComponent } from './seller-layout/settings/settings.component';
+import { FastComponent } from './seller-layout/fast/fast.component';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { SettingsComponent } from './seller-layout/settings/settings.component';
     ListComponent,
     PaymentComponent,
     StorageComponent,
-    SettingsComponent
+    SettingsComponent,
+    FastComponent
   ],
   imports: [
     BrowserModule,

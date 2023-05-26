@@ -293,6 +293,10 @@ export class OrderService {
     return this.http.post<any>(`${environment.apiURL}/api/order-open`, data);
   }
 
+  fast(data: any): Observable<any> {
+    return this.http.post<any>(`${environment.apiURL}/api/order-open/fast`, data);
+  }
+
   patch(data: any, _id: string): Observable<any> {
     return this.http.patch<any>(`${environment.apiURL}/api/order-open/${_id}`, data)
   }

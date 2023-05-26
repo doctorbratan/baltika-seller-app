@@ -9,6 +9,7 @@ import { ListComponent } from './seller-layout/list/list.component';
 import { PaymentComponent } from './seller-layout/payment/payment.component';
 import { StorageComponent } from './seller-layout/storage/storage.component';
 import { SettingsComponent } from './seller-layout/settings/settings.component';
+import { FastComponent } from './seller-layout/fast/fast.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'order', pathMatch: 'full' }, // дочерний роут
       { path: 'order', component: OrderComponent }, // дочерний роут
       { path: 'list', component: ListComponent }, // дочерний роут
+      { path: 'fast', component: FastComponent },
       { path: 'payment', component: PaymentComponent },
       { path: 'storage', component: StorageComponent }, // дочерний роут // дочерний роут
       { path: 'settings', component: SettingsComponent } // дочерний роут // дочерний роут

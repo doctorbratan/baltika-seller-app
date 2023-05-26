@@ -1,0 +1,170 @@
+<section>
+
+    <div class="info-order-container">
+
+        <span class="info-order">
+            <b>{{customer.name}}</b>
+            <b>{{order_for.name}}</b>
+            <button 
+            (click)="printCheck()"
+            class="mat-element" [disabled]="pennding || list.length == 0" 
+            mat-flat-button>Печать
+            </button>
+        </span>
+
+        <span class="info-order">
+
+            <mat-form-field appearance="fill" class="mat-element">
+                <mat-label class="mat-element">Оплата</mat-label>
+                <mat-select class="mat-element" matNativeControl [(ngModel)]="payment">
+                    <mat-option class="mat-element" value="Наличные">Наличные</mat-option>
+                    <mat-option class="mat-element" value="Картой">Картой</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button class="mat-element" 
+            [disabled]="pennding || list.length == 0" 
+            mat-flat-button
+            (click)="fast()"
+            color="primary">Закрыть
+            </button>
+        </span>
+
+    </div>
+
+    <div id="order-list-container">
+
+
+        <h1 *ngIf="list.length == 0">Добавьте позицию!</h1>
+
+        <table *ngIf="list.length > 0" class="GeneratedTable">
+            <thead>
+                <tr>
+                    <th>X</th>
+                    <th class="position-name">Позиция</th>
+                    <th>Цена</th>
+                    <th>Кол-во</th>
+                    <th>Итого</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let position of list; let i = index">
+                    <td>
+                        <b class="remove" (click)="deleteFromList(i)">
+                            X
+                        </b>
+                    </td>
+                    <td (click)="addComment(i)">
+                        [ {{position.category.name}} ] {{position.name}}
+                        <ng-container *ngIf="position.comment">
+                            &nbsp;&nbsp;
+                            {{position.comment}}
+                        </ng-container>
+                        <b *ngIf="position.processed" style="color: white;">
+                            &nbsp;
+                            ✓
+                        </b>
+                    </td>
+                    <td>
+                        <b>
+                            {{position.cost}}
+                        </b>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="!position.processed">
+                            <b class="remove" (click)="minusQuantity(i)">-</b>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                        </ng-container>
+                        {{position.quantity}}
+                        <ng-container *ngIf="!position.processed">
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <b class="remove" (click)="plusQuantity(i)">+</b>
+                        </ng-container>
+                    </td>
+                    <td>{{position.total}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <span *ngIf="list.length > 0" id="total-info">
+            <ng-container *ngIf="salle">
+                <b>Итого: {{total}} MDL</b>
+                &nbsp;
+            </ng-container>
+            <b *ngIf="salle">Скидка: {{salle}} %</b>
+            <mat-form-field *ngIf=" authService.user && authService.user.status !== 'seller' "
+                class="example-full-width" class="mat-element">
+                <mat-label class="mat-element">%</mat-label>
+                <input class="mat-element" matInput type="number" [(ngModel)]="salle" (ngModelChange)="computePrice()">
+            </mat-form-field>
+            <b>К оплате: {{total_price}} MDL</b>
+        </span>
+
+
+    </div>
+
+    <div id="position-section">
+
+        <span *ngIf="positions" id="positons-container">
+
+            <span *ngFor="let position of positions | positionFilter: {category, cost, filterText}" class="position">
+                <span class="position-name">
+                    <b>[ {{position.category.name}} ]</b>
+                    <b class="position-name-b">{{position.name}}</b>
+                </span>
+                <span class="quantity-container">
+
+                    <button class="button-quantity" mat-raised-button
+                        (click)="changeQuantity(position, true)">+</button>
+
+                    <input type="number" class="quantity" [(ngModel)]="position.quantity">
+
+                    <button [disabled]="position.quantity === 1" (click)="changeQuantity(position, false)"
+                        class="button-quantity" mat-raised-button>
+                        -</button>
+
+                </span>
+                <span class="position-add">
+                    <button class="mat-element" [disabled]="pennding" *ngIf="!position.stop"
+                        (click)="addToList(position)" mat-raised-button>Добавить</button>
+                </span>
+            </span>
+            <h3 *ngIf="positions && ( positions | positionFilter: {category, cost, filterText} ).length == 0 ">Не
+                найденны позиции!</h3>
+        </span>
+
+        <span id="query-contaier">
+
+            <mat-form-field *ngIf="categories" class="mat-element" appearance="fill">
+                <mat-label class="mat-element">Категория</mat-label>
+                <mat-select class="mat-element" [(ngModel)]="category">
+                    <mat-option class="mat-element" *ngFor="let category of categories" [value]="category._id">
+                        {{category.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="mat-element" class="example-full-width">
+                <mat-label class="mat-element">По цене</mat-label>
+                <input class="mat-element" matInput type="number" [(ngModel)]="cost">
+            </mat-form-field>
+
+            <span class="query">
+
+                <mat-form-field style="width: 70%;" class="mat-element">
+                    <mat-label class="mat-element">По названию</mat-label>
+                    <input class="mat-element" matInput [(ngModel)]="filterText">
+                </mat-form-field>
+
+                <mat-icon (click)="clearSearch()" class="pointer add-icon" aria-hidden="false" aria-label="Очистить"
+                    fontIcon="backspace">
+                </mat-icon>
+
+            </span>
+
+
+        </span>
+
+    </div>
+
+</section>
