@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
 import { PositionService } from 'src/app/services/position.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
@@ -9,6 +9,28 @@ import { SnackbarService } from 'src/app/services/snackbar.service';
   styleUrls: ['./storage.component.css']
 })
 export class StorageComponent implements OnInit {
+  insert: boolean = false
+  barcode: string | undefined
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+
+    // console.log(event.key)
+
+    if (event.key === "Insert") {
+      this.insert = !this.insert
+    }
+
+    if ( this.insert && event.key !== "Insert" ) {
+      this.barcode = (this.barcode || '') + event.key;
+    }
+
+    if (!this.insert && this.barcode) {
+      this.findByBarcode(this.barcode)
+      // console.log('Barcode:', this.barcode);
+      this.barcode = undefined
+    }
+
+  }
 
   loading: boolean = false
   pennding: boolean = false
@@ -28,6 +50,29 @@ export class StorageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPositions()
+  }
+
+  findByBarcode(barcode: string) {
+    this.pennding = true
+
+    this.positionService.findOne({barcode, storage: true, visible: true, stop: false}).subscribe(
+      data => {
+        if (data) {
+          this.position = data
+          this.category = data.category._id
+          this.quantity = 0
+          this.pennding = false
+        } else {
+          this.snackbar.open("Не найденно");
+          this.pennding = false
+        }
+      },
+      error => {
+        console.warn(error)
+        this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+        this.pennding = false
+      }
+    )
   }
 
 

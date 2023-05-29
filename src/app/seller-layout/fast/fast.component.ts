@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { CommentItemComponent } from "../../dialogs/comment-item/comment-item.component";
@@ -38,6 +38,28 @@ export interface OrderPosition {
   styleUrls: ['./fast.component.css']
 })
 export class FastComponent implements OnInit {
+  insert: boolean = false
+  barcode: string | undefined
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+
+    // console.log(event.key)
+
+    if (event.key === "Insert") {
+      this.insert = !this.insert
+    }
+
+    if ( this.insert && event.key !== "Insert" ) {
+      this.barcode = (this.barcode || '') + event.key;
+    }
+
+    if (!this.insert && this.barcode) {
+      this.findByBarcode(this.barcode)
+      // console.log('Barcode:', this.barcode);
+      this.barcode = undefined
+    }
+
+  }
 
   loading: boolean = false
   pennding: boolean = false
@@ -80,6 +102,27 @@ export class FastComponent implements OnInit {
   ngOnInit(): void {
     this.getCategories();
     this.getPositions();
+  }
+
+  findByBarcode(barcode: string) {
+    this.pennding = true
+
+    this.positionService.findOne({barcode, visible: true, stop: false}).subscribe(
+      data => {
+        if (data) {
+          data.quantity = 1
+          this.addToList(data);
+        } else {
+          this.snackbar.open("Не найденно");
+          this.pennding = false
+        }
+      },
+      error => {
+        console.warn(error)
+        this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+        this.pennding = false
+      }
+    )
   }
 
   fast() {
@@ -260,6 +303,7 @@ export class FastComponent implements OnInit {
 
   //Добавление с главной страннцы
   public addToList(position: any) {
+    this.pennding = true
 
     const orderPosition: OrderPosition = Object.assign({}, {
       processed: false,
@@ -316,6 +360,7 @@ export class FastComponent implements OnInit {
 
   // Фунуция чтоб пересчитывать конечную цену
   public computePrice() {
+    this.pennding = true
 
     if (this.customer && this.customer.type === 'admin') {
       for (let position of this.list) {
@@ -362,6 +407,7 @@ export class FastComponent implements OnInit {
 
     this.total_price = +this.total_price.toFixed(0)
 
+    this.pennding = false
   }
 
   clearSearch() {

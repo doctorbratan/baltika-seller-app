@@ -1,6 +1,6 @@
 section {
     width: 100%;
-    min-height: calc(99vh - var(--footer_heigth));
+    /* min-height: calc(99vh - var(--footer_heigth)); */
     display: flex;
     flex-direction: column;
 }
@@ -161,7 +161,7 @@ table.GeneratedTable th {
 /* Выбор позиций */
 
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
     b {
         font-size: 8px;

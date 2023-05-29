@@ -12,7 +12,7 @@
         </mat-form-field>
 
         <mat-form-field *ngIf="category">
-            <mat-label>Позиция</mat-label>
+            <mat-label>{{position ? position.name : "Позиция"}}</mat-label>
             <mat-select class="mat-element" [(ngModel)]="position" (selectionChange)="quantity = undefined" name="position">
                 <ng-container *ngFor="let pos of positions">
                     <mat-option class="mat-element" *ngIf="pos.category._id === category" [value]="pos">

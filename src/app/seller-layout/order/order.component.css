@@ -4,7 +4,7 @@ b {
 
 section {
     width: 100%;
-    min-height: calc(99vh - var(--footer_heigth));
+    /* min-height: calc(99vh - var(--footer_heigth)); */
     display: flex;
 }
 
@@ -156,7 +156,7 @@ table.GeneratedTable th {
     color: var(--select_color);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
     section {
         flex-direction: column-reverse;

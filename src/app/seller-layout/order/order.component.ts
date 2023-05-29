@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -21,6 +21,28 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 
 export class OrderComponent implements OnInit, OnDestroy {
+  insert: boolean = false
+  barcode: string | undefined
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+
+    // console.log(event.key)
+
+    if (event.key === "Insert") {
+      this.insert = !this.insert
+    }
+
+    if ( this.insert && event.key !== "Insert" ) {
+      this.barcode = (this.barcode || '') + event.key;
+    }
+
+    if (!this.insert && this.barcode) {
+      this.findByBarcode(this.barcode)
+      // console.log('Barcode:', this.barcode);
+      this.barcode = undefined
+    }
+
+  }
 
   pennding: boolean = false
 
@@ -57,6 +79,27 @@ export class OrderComponent implements OnInit, OnDestroy {
     this.getPositions();
     this.getCustomers();
     this.checkQueryParams();
+  }
+
+  findByBarcode(barcode: string) {
+    this.pennding = true
+
+    this.positionService.findOne({barcode, visible: true, stop: false}).subscribe(
+      data => {
+        if (data) {
+          data.quantity = 1
+          this.addToOrder(data);
+        } else {
+          this.snackbar.open("Не найденно");
+          this.pennding = false
+        }
+      },
+      error => {
+        console.warn(error)
+        this.snackbar.open(error.error.message ? error.error.message : "Ошибка", 5)
+        this.pennding = false
+      }
+    )
   }
 
   checkQueryParams() {
