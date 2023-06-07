@@ -16,11 +16,11 @@ export class StorageComponent implements OnInit {
 
     // console.log(event.key)
 
-    if (event.key === "Insert") {
+    if (event.key === "Enter") {
       this.insert = !this.insert
     }
 
-    if ( this.insert && event.key !== "Insert" ) {
+    if ( this.insert && event.key !== "Enter" ) {
       this.barcode = (this.barcode || '') + event.key;
     }
 

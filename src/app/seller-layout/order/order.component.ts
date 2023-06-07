@@ -28,11 +28,11 @@ export class OrderComponent implements OnInit, OnDestroy {
 
     // console.log(event.key)
 
-    if (event.key === "Tab") {
+    if (event.key === "Enter") {
       this.insert = !this.insert
     }
 
-    if ( this.insert && event.key !== "Tab" ) {
+    if ( this.insert && event.key !== "Enter" ) {
       this.barcode = (this.barcode || '') + event.key;
     }
 
