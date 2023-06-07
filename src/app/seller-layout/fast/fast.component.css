@@ -1,11 +1,11 @@
+/* 
 section {
     width: 100%;
-    /* min-height: calc(99vh - var(--footer_heigth)); */
     display: flex;
     flex-direction: column;
 }
 
-/* О заказе */
+
 .info-order-container {
     width: 100%;
     padding: 10px 0px;
@@ -23,9 +23,9 @@ section {
     justify-content: space-around;
     flex-wrap: wrap;
 }
-/* О заказе */
 
-/* Таблица заказа */
+
+
 #order-list-container {
     padding: 10px 0px;
     width: 100%;
@@ -76,10 +76,8 @@ table.GeneratedTable th {
 .remove:hover {
     color: var(--select_color);
 }
-/* Таблица заказа */
 
 
-/* Выбор позиций */
 #position-section {
     width: 100%;
     display: flex;
@@ -100,7 +98,6 @@ table.GeneratedTable th {
 .position {
     padding: 15px 0px;
     width: 100%;
-    /* min-height: 50px; */
     border-bottom: 1px solid white;
     display: flex;
     align-items: center;
@@ -119,8 +116,6 @@ table.GeneratedTable th {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    /* flex-direction: column; */
-    /* align-items: center; */
 }
 
 .quantity {
@@ -146,8 +141,6 @@ table.GeneratedTable th {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    /* flex-direction: column; */
-    /* flex-wrap: wrap; */
 }
 
 .query {
@@ -158,7 +151,7 @@ table.GeneratedTable th {
     justify-content: space-around;
     flex-wrap: wrap
 }
-/* Выбор позиций */
+
 
 
 @media (max-width: 900px) {
@@ -207,3 +200,228 @@ table.GeneratedTable th {
 
 }
 
+*/
+
+b {
+    text-align: center;
+}
+
+section {
+    width: 100%;
+    /* min-height: calc(99vh - var(--footer_heigth)); */
+    display: flex;
+}
+
+/* Сторона Позиций */
+#position-section {
+    padding: 10px 0px;
+    overflow: auto;
+    flex-basis: 35%;
+    border-right: 1px solid white;
+    display: flex;
+    flex-direction: column;
+}
+
+#query-contaier {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding-bottom: 5px;
+    border-bottom: 1px solid white;
+}
+
+.query {
+    width: 100%;
+    padding: 5px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap
+}
+
+#positons-container {
+    max-height: 70vh;
+    overflow: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.position {
+    padding: 15px 0px;
+    width: 100%;
+    /* min-height: 50px; */
+    border-bottom: 1px solid white;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.position-name {
+    flex-basis: 35%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.quantity-container {
+    flex-basis: 35%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.quantity {
+    text-align: center;
+    width: 90%;
+    color: black;
+}
+
+.button-quantity {
+    width: 100%;
+}
+
+.position-add {
+    flex-basis: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Сторона Позиций */
+#order-section {
+    flex-basis: 65%;
+    display: flex;
+    flex-direction: column;
+}
+
+#info-container {
+    padding: 5px 0px;
+    width: 100%;
+    min-height: 10%;
+    border-bottom: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+#list-container {
+    max-height: 65vh;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    overflow: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+table.GeneratedTable {
+    text-align: center;
+    width: 90%;
+    border-collapse: collapse;
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+    color: white;
+}
+
+table.GeneratedTable td,
+table.GeneratedTable th {
+    border-width: 1px;
+    border-color: white;
+    border-style: solid;
+    padding: 3px;
+}
+
+table.GeneratedTable th {
+    color: var(--first_color);
+    background-color: white;
+}
+
+
+#total-info {
+    border-top: 1px solid white;
+    margin-top: 20px;
+    padding-top: 10px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.remove {
+    cursor: pointer;
+}
+
+.remove:hover {
+    color: var(--select_color);
+}
+
+@media (max-width: 900px) {
+
+    section {
+        flex-direction: column-reverse;
+    }
+
+    b {
+        font-size: 8px;
+    }
+
+    h1 {
+        font-size: 12px;
+    }
+
+
+    #position-section {
+        border-right: none;
+        border-top: 1px solid #8633AA;
+        flex-basis: auto;
+        flex-direction: column-reverse;
+    }
+
+    
+
+    #query-contaier {   
+        flex-direction: column-reverse;
+        border-top: 2px solid #8633AA;
+        border-bottom: none;
+    }
+
+    #positons-container {
+        min-height: 150px;
+        max-height: 150px;
+    }
+
+    .position-name-b {
+        font-size: 12px;
+    }
+
+
+    .position {
+        font-size: 10px;
+    }
+
+    #order-section {
+        flex-basis: auto;
+        padding-top: 15px;
+    }
+
+    #list-container { 
+        max-height: none;
+    }
+
+    table.GeneratedTable {
+        font-size: 8px;
+        width: 95%;
+    }
+
+    .position-add, .mat-element{
+        font-size: 8px;
+    }
+
+
+
+}

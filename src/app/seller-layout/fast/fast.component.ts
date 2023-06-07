@@ -45,19 +45,18 @@ export class FastComponent implements OnInit {
 
     // console.log(event.key)
 
-    if (event.key === "Insert") {
+    if (event.key === "Tab") {
       this.insert = !this.insert
     }
 
-    if ( this.insert && event.key !== "Insert" ) {
+    if ( this.insert && event.key !== "Tab" ) {
       this.barcode = (this.barcode || '') + event.key;
     }
 
     if (!this.insert && this.barcode) {
       this.findByBarcode(this.barcode)
-      // console.log('Barcode:', this.barcode);
       this.barcode = undefined
-    }
+    } 
 
   }
 
@@ -73,6 +72,7 @@ export class FastComponent implements OnInit {
 
 
   // Инфо о заказе
+  isPrinted: boolean = false
   payment = "Наличные"
   status = "Закрыт"
   customer: any = {
@@ -151,6 +151,7 @@ export class FastComponent implements OnInit {
 
 
   public clear() {
+    this.isPrinted = false
     this.payment = "Наличные"
     this.list = [],
     this.total = 0,
@@ -161,6 +162,7 @@ export class FastComponent implements OnInit {
   public zipOrder() {
 
     const order = {
+      isPrinted: this.isPrinted,
       seller: this.authService.user,
       start: moment().format(),
       shift: moment().format("YYYY-MM-DD"),
@@ -189,7 +191,7 @@ export class FastComponent implements OnInit {
 
     this.settingsService.order(data).subscribe(
       data => {
-        console.log(true)
+        this.isPrinted = true
       },
       error => {
         this.snackbar.open("Ошибка печати чека!");
